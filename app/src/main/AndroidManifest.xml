@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.coolblee.easynote">
+
+    <uses-sdk
+            android:maxSdkVersion="23"
+            android:minSdkVersion="15"
+            android:targetSdkVersion="23">
+    </uses-sdk>
+
+    <uses-permission android:name="com.coolblee.permission.READ_NOTES"/>
+    <uses-permission android:name="com.coolblee.permission.WRITE_NOTES"/>
+
+    <application
+            android:allowBackup="true"
+            android:icon="@mipmap/easy_note_launcher"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/EasyNoteTheme">
+        <activity
+                android:name=".main.MainActivity"
+                android:label="@string/app_name"
+                android:theme="@style/EasyNoteTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".editor.EditActivity"
+                android:label="@string/edit"
+                android:parentActivityName=".main.MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".main.MainActivity"/>
+        </activity>
+
+        <provider
+                android:authorities="com.coolblee.easynote"
+                android:name=".provider.EasyNoteProvider"
+                android:label="@string/app_name"
+                android:multiprocess="false"
+                android:exported="true"
+                android:readPermission="com.coolblee.permission.READ_NOTES"
+                android:writePermission="com.coolblee.permission.WRITE_NOTES">
+        </provider>
+    </application>
+
+</manifest>
