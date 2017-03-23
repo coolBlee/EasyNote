@@ -18,18 +18,18 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         ActionBar actionBar = getSupportActionBar();
-        if(null != actionBar){
+        if (null != actionBar) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         initViews();
         initListener();
     }
 
-    private void initViews(){
+    private void initViews() {
         mContentEditText = (EditText) this.findViewById(R.id.note_content);
     }
 
-    private void initListener(){
+    private void initListener() {
         this.findViewById(R.id.save_note).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,7 +38,7 @@ public class EditActivity extends AppCompatActivity {
         });
     }
 
-    private void saveNoteContent(String content){
+    private void saveNoteContent(String content) {
         ContentValues values = new ContentValues();
         values.put(EasyNote.Notes.DETAIL, content);
         getContentResolver().insert(EasyNote.Notes.CONTENT_URI, values);

@@ -12,15 +12,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.coolblee.coolblibrary.activity.BaseActivity;
 import com.coolblee.easynote.R;
 import com.coolblee.easynote.util.PageJumper;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainContentFragment.OnListFragmentInteractionListener {
     private static final String TAG = "MainActivity";
@@ -28,12 +28,25 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initVariables(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    @Override
+    protected void setViewsAction(Bundle savedInstanceState) {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,15 +56,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.setDrawerListener(toggle);
-        toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
+    @Override
+    protected void loadData(Bundle savedInstanceState) {
         addMainContent();
     }
 
@@ -60,9 +71,10 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction transaction = manager.beginTransaction();
         Fragment fragment = manager.findFragmentByTag(MAIN_CONTENT_FRAGMENT_TAG);
         if (null == fragment) {
-            transaction.add(R.id.main_container, getMainContentFragment(), MAIN_CONTENT_FRAGMENT_TAG);
-            transaction.commit();
+            fragment = getMainContentFragment();
         }
+        transaction.add(R.id.main_container, fragment, MAIN_CONTENT_FRAGMENT_TAG);
+        transaction.commit();
     }
 
     private Fragment getMainContentFragment() {
@@ -106,18 +118,21 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (id) {
+            case R.id.nav_camera:
+                break;
+            case R.id.nav_gallery:
+                break;
+            case R.id.nav_slideshow:
+                break;
+            case R.id.nav_manage:
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
+                break;
+            default:
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -128,7 +143,7 @@ public class MainActivity extends AppCompatActivity
     //when the list item clicked, this method will be execute
     @Override
     public void onListFragmentInteraction() {
-        Log.d(TAG,"jump to editor activity");
+        Log.d(TAG, "jump to editor activity");
         PageJumper.startEditActivity(this);
     }
 }

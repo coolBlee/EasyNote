@@ -1,24 +1,28 @@
 package com.coolblee.coolblibrary.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends AppCompatActivity {
 
-    protected abstract void initVariables();
+    protected abstract void initVariables(Bundle savedInstanceState);
 
-    protected abstract void initViews();
+    protected abstract void initViews(Bundle savedInstanceState);
 
-    protected abstract void loadData();
+    protected abstract void setViewsAction(Bundle savedInstanceState);
+
+    protected abstract void loadData(Bundle savedInstanceState);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initVariables();
+        initVariables(savedInstanceState);
 
-        initViews();
+        initViews(savedInstanceState);
 
-        loadData();
+        setViewsAction(savedInstanceState);
+
+        loadData(savedInstanceState);
     }
 }
