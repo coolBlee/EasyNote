@@ -110,17 +110,6 @@ public class MainContentFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) activity;
-        } else {
-            throw new RuntimeException(activity.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
@@ -133,8 +122,8 @@ public class MainContentFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onStart() {
-        super.onStart();
         startLoadingNotes();
+        super.onStart();
     }
 
     private void startLoadingNotes() {

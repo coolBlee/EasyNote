@@ -26,6 +26,7 @@ public class MainActivity extends BaseActivity
     private static final String TAG = "MainActivity";
     private static final String MAIN_CONTENT_FRAGMENT_TAG = "easy_note_main_fragment_tag";
     private DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mToggle;
 
     @Override
     protected void initVariables(Bundle savedInstanceState) {
@@ -39,10 +40,18 @@ public class MainActivity extends BaseActivity
         setSupportActionBar(toolbar);
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        mToggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.setDrawerListener(toggle);
-        toggle.syncState();
+        mDrawer.addDrawerListener(mToggle);
+        mToggle.syncState();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(null != mDrawer){
+            mDrawer.removeDrawerListener(mToggle);
+        }
     }
 
     @Override
@@ -53,6 +62,7 @@ public class MainActivity extends BaseActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                PageJumper.startEditActivity(MainActivity.this);
             }
         });
 
