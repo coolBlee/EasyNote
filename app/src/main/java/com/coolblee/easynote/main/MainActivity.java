@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                PageJumper.startEditActivity(MainActivity.this);
+                PageJumper.createNewNote(MainActivity.this);
             }
         });
 
@@ -152,8 +152,8 @@ public class MainActivity extends BaseActivity
 
     //when the list item clicked, this method will be execute
     @Override
-    public void onListFragmentInteraction() {
+    public void onListFragmentInteraction(long noteId) {
         Log.d(TAG, "jump to editor activity");
-        PageJumper.startEditActivity(this);
+        PageJumper.editNote(this, noteId);
     }
 }

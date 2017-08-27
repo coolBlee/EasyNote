@@ -25,12 +25,18 @@ public class EasyNoteProvider extends ContentProvider {
     private EasyNoteDatabaseHelper mEasyNoteHelper;
 
     private static final int NOTES = 1;
+    private static final int NOTE_ID = 2;
     private static final UriMatcher sUriMatcher;
 
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+        // Add a pattern that routes URIs terminated with "notes" to a NOTES operation
         sUriMatcher.addURI(EasyNote.AUTHORITY, "notes", NOTES);
+
+        // Add a pattern that routes URIs terminated with "notes" plus an integer
+        // to a note ID operation
+        sUriMatcher.addURI(EasyNote.AUTHORITY, "notes/#", NOTE_ID);
     }
 
     /**
@@ -77,6 +83,11 @@ public class EasyNoteProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case NOTES:
                 qb.setProjectionMap(sNotesProjectionMap);
+                break;
+            case NOTE_ID:
+                qb.setProjectionMap(sNotesProjectionMap);
+                final String noteId = uri.getPathSegments().get(Notes.NOTE_ID_PATH_POSITION);
+                qb.appendWhere(Notes._ID + " = " + noteId);
                 break;
             default:
                 throw new IllegalArgumentException("UnKnown URI " + uri);
@@ -164,11 +175,55 @@ public class EasyNoteProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        int count;
+        // Opens the database object in "write" mode.
+        SQLiteDatabase qb = mEasyNoteHelper.getWritableDatabase();
+
+        switch (sUriMatcher.match(uri)) {
+            case NOTES:
+                count = qb.delete(EasyNoteDatabaseHelper.Tables.NOTES, selection, selectionArgs);
+                break;
+            case NOTE_ID:
+                final String noteId = uri.getPathSegments().get(Notes.NOTE_ID_PATH_POSITION);
+                String finalSelection = Notes._ID + " = " + noteId;
+                if(null != selection) {
+                    finalSelection = finalSelection + " AND " + selection;
+                }
+                count = qb.delete(EasyNoteDatabaseHelper.Tables.NOTES, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return count;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        int count;
+        // Opens the database object in "write" mode.
+        SQLiteDatabase qb = mEasyNoteHelper.getWritableDatabase();
+
+        switch (sUriMatcher.match(uri)) {
+            case NOTES:
+                count = qb.update(EasyNoteDatabaseHelper.Tables.NOTES, values, selection, selectionArgs);
+                break;
+            case NOTE_ID:
+                final String noteId = uri.getPathSegments().get(Notes.NOTE_ID_PATH_POSITION);
+                String finalSelection = Notes._ID + " = " + noteId;
+                if(null != selection) {
+                    finalSelection = finalSelection + " AND " + selection;
+                }
+                count = qb.update(EasyNoteDatabaseHelper.Tables.NOTES, values, finalSelection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return count;
     }
 }

@@ -10,7 +10,16 @@ import com.coolblee.easynote.editor.EditActivity;
  */
 public class PageJumper {
 
-    public static void startEditActivity(Context context) {
+    public static final String EXTRA_NOTE_ID = "com.coolblee.easynote.NOTE_ID";
+
+    public static void editNote(Context context, long noteId) {
+        Intent intent = new Intent();
+        intent.setClass(context, EditActivity.class);
+        intent.putExtra(EXTRA_NOTE_ID, noteId);
+        startActivity(context, intent);
+    }
+
+    public static void createNewNote(Context context) {
         Intent intent = new Intent();
         intent.setClass(context, EditActivity.class);
         startActivity(context, intent);

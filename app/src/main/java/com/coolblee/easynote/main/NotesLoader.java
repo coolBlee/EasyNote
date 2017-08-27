@@ -31,4 +31,8 @@ public class NotesLoader extends CursorLoader{
     public NotesLoader(Context context) {
         super(context, Notes.CONTENT_URI, PROJECTTION, null, null, null);
     }
+
+    public NotesLoader(Context context, Uri uri) {
+        super(context, uri, PROJECTTION, null, null, null);
+    }
 }

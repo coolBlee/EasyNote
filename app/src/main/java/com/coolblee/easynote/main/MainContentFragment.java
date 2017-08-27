@@ -172,6 +172,6 @@ public class MainContentFragment extends Fragment implements LoaderManager.Loade
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction();
+        void onListFragmentInteraction(long noteId);
     }
 }

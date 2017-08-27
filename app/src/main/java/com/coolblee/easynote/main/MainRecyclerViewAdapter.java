@@ -67,17 +67,17 @@ public class MainRecyclerViewAdapter extends RecyclerViewCursorAdapter<MainRecyc
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
         holder.mCardView.setCardBackgroundColor(getRandomItemBgColor());
         holder.mContentView.setText(cursor.getString(NotesLoader.NOTE_DETAIL));
-        bindViewListener(holder.mView);
+        bindViewListener(holder.mView, cursor.getLong(NotesLoader.NOTE_ID));
     }
 
-    private void bindViewListener(View view){
+    private void bindViewListener(View view, final long noteId){
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction();
+                    mListener.onListFragmentInteraction(noteId);
                 }
             }
         });

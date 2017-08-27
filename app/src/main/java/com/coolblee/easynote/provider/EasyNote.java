@@ -33,6 +33,11 @@ public final class EasyNote {
         private static final String PATH_NOTE_ID = "/notes/";
 
         /**
+         * 0-relative position of a note ID segment in the path part of a note ID URI
+         */
+        public static final int NOTE_ID_PATH_POSITION = 1;
+
+        /**
          * The content:// style URL for this table
          */
         public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
