@@ -71,7 +71,8 @@ public class EasyNoteProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+            String sortOrder) {
 
         // Constructs a new query builder and sets its table name
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -138,8 +139,8 @@ public class EasyNoteProvider extends ContentProvider {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
-        ContentValues  values;
-        if(null != initialValues){
+        ContentValues values;
+        if (null != initialValues) {
             values = new ContentValues(initialValues);
         } else {
             values = new ContentValues();
@@ -147,11 +148,11 @@ public class EasyNoteProvider extends ContentProvider {
 
         Long now = Long.valueOf(System.currentTimeMillis());
 
-        if(!values.containsKey(Notes.CREATED_TIME)){
+        if (!values.containsKey(Notes.CREATED_TIME)) {
             values.put(Notes.CREATED_TIME, now);
         }
 
-        if(!values.containsKey(Notes.MODIFY_TIME)){
+        if (!values.containsKey(Notes.MODIFY_TIME)) {
             values.put(Notes.MODIFY_TIME, now);
         }
 
@@ -160,7 +161,7 @@ public class EasyNoteProvider extends ContentProvider {
 
         long rowId = db.insert(EasyNoteDatabaseHelper.Tables.NOTES, null, values);
 
-        if(rowId > 0){
+        if (rowId > 0) {
             // Creates a URI with the note ID pattern and the new row ID appended to it.
             Uri noteUri = ContentUris.withAppendedId(Notes.CONTENT_ID_URI_BASE, rowId);
 
@@ -186,7 +187,7 @@ public class EasyNoteProvider extends ContentProvider {
             case NOTE_ID:
                 final String noteId = uri.getPathSegments().get(Notes.NOTE_ID_PATH_POSITION);
                 String finalSelection = Notes._ID + " = " + noteId;
-                if(null != selection) {
+                if (null != selection) {
                     finalSelection = finalSelection + " AND " + selection;
                 }
                 count = qb.delete(EasyNoteDatabaseHelper.Tables.NOTES, selection, selectionArgs);
@@ -208,15 +209,17 @@ public class EasyNoteProvider extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
             case NOTES:
-                count = qb.update(EasyNoteDatabaseHelper.Tables.NOTES, values, selection, selectionArgs);
+                count = qb.update(EasyNoteDatabaseHelper.Tables.NOTES, values, selection,
+                        selectionArgs);
                 break;
             case NOTE_ID:
                 final String noteId = uri.getPathSegments().get(Notes.NOTE_ID_PATH_POSITION);
                 String finalSelection = Notes._ID + " = " + noteId;
-                if(null != selection) {
+                if (null != selection) {
                     finalSelection = finalSelection + " AND " + selection;
                 }
-                count = qb.update(EasyNoteDatabaseHelper.Tables.NOTES, values, finalSelection, selectionArgs);
+                count = qb.update(EasyNoteDatabaseHelper.Tables.NOTES, values, finalSelection,
+                        selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);

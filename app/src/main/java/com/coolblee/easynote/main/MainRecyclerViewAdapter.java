@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,9 +66,19 @@ public class MainRecyclerViewAdapter extends RecyclerViewCursorAdapter<MainRecyc
 
     @Override
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
-        holder.mCardView.setCardBackgroundColor(getRandomItemBgColor());
+        bindTitle(holder, cursor);
+        holder.mCardView.setCardBackgroundColor(cursor.getInt(NotesLoader.NOTE_BACKGROUND_COLOR));
         holder.mContentView.setText(cursor.getString(NotesLoader.NOTE_DETAIL));
         bindViewListener(holder.mView, cursor.getLong(NotesLoader.NOTE_ID));
+    }
+
+    private void bindTitle(ViewHolder holder, Cursor cursor){
+        final String title = cursor.getString(NotesLoader.NOTE_TITLE);
+        if(TextUtils.isEmpty(title)){
+            holder.mTitleView.setText(R.string.have_no_title);
+        } else {
+            holder.mTitleView.setText(title);
+        }
     }
 
     private void bindViewListener(View view, final long noteId){
@@ -97,6 +108,7 @@ public class MainRecyclerViewAdapter extends RecyclerViewCursorAdapter<MainRecyc
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final CardView mCardView;
+        public final TextView mTitleView;
         public final TextView mContentView;
         public DummyItem mItem;
 
@@ -104,6 +116,7 @@ public class MainRecyclerViewAdapter extends RecyclerViewCursorAdapter<MainRecyc
             super(view);
             mView = view;
             mCardView = (CardView) view.findViewById(R.id.cardview);
+            mTitleView = (TextView) view.findViewById(R.id.title);
             mContentView = (TextView) view.findViewById(R.id.content);
         }
 

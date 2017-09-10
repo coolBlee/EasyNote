@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_search">查找</string>
+    <string name="action_single_column">单列视图</string>
+    <string name="action_multi_column">多列视图</string>
+    <string name="action_settings">设置</string>
     <string name="app_name">速记</string>
     <string name="edit">编辑</string>
+    <string name="have_no_title">无标题</string>
+    <string name="input_title">输入标题</string>
+    <string name="complete">完成</string>
 </resources>

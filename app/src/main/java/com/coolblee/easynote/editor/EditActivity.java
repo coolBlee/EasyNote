@@ -4,11 +4,14 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Loader;
+import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.coolblee.coolblibrary.activity.BaseActivity;
@@ -26,12 +29,17 @@ public class EditActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     private Uri mUri;
 
-    private EditText mContentEditText;
+    private EditText mTileEditText, mContentEditText;
+    private TypedArray mBgColors;
+    private int mChoosedColor;
 
     @Override
     protected void initVariables(Bundle savedInstanceState) {
+        mBgColors = this.getResources().obtainTypedArray(R.array.bg_colors);
+        mChoosedColor = mBgColors.getColor(0, Color.WHITE);
+
         final long noteId = getIntent().getLongExtra(PageJumper.EXTRA_NOTE_ID, -1);
-        if(noteId <= 0) {
+        if (noteId <= 0) {
             //create new note mode
             mState = STATE_CREAT_NEW;
             mUri = Notes.CONTENT_URI;
@@ -49,28 +57,26 @@ public class EditActivity extends BaseActivity implements LoaderManager.LoaderCa
         if (null != actionBar) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        mTileEditText = (EditText) this.findViewById(R.id.note_title);
         mContentEditText = (EditText) this.findViewById(R.id.note_content);
     }
 
     @Override
     protected void setViewsAction(Bundle savedInstanceState) {
-        this.findViewById(R.id.save_note).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveNoteContent(mContentEditText.getText().toString());
-            }
-        });
+
     }
 
-    private void saveNoteContent(String content) {
+    private void saveNoteContent() {
         ContentValues values = new ContentValues();
-        values.put(Notes.DETAIL, content);
+        values.put(Notes.TITLE, mTileEditText.getText().toString());
+        values.put(Notes.DETAIL, mContentEditText.getText().toString());
+        values.put(Notes.BACKGROUND_COLOR, mChoosedColor);
         getContentResolver().update(mUri, values, null, null);
     }
 
     @Override
     protected void loadData(Bundle savedInstanceState) {
-        if(STATE_EDIT == mState) {
+        if (STATE_EDIT == mState) {
             startLoadingNotes();
         }
     }
@@ -87,7 +93,7 @@ public class EditActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(null == data){
+        if (null == data) {
             return;
         }
         data.moveToFirst();
@@ -97,5 +103,34 @@ public class EditActivity extends BaseActivity implements LoaderManager.LoaderCa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.complete){
+            saveNoteContent();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(null != mBgColors) {
+            mBgColors.recycle();
+        }
     }
 }
