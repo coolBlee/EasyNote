@@ -190,7 +190,7 @@ public class EasyNoteProvider extends ContentProvider {
                 if (null != selection) {
                     finalSelection = finalSelection + " AND " + selection;
                 }
-                count = qb.delete(EasyNoteDatabaseHelper.Tables.NOTES, selection, selectionArgs);
+                count = qb.delete(EasyNoteDatabaseHelper.Tables.NOTES, finalSelection, selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);

@@ -71,7 +71,11 @@ public class EditActivity extends BaseActivity implements LoaderManager.LoaderCa
         values.put(Notes.TITLE, mTileEditText.getText().toString());
         values.put(Notes.DETAIL, mContentEditText.getText().toString());
         values.put(Notes.BACKGROUND_COLOR, mChoosedColor);
-        getContentResolver().update(mUri, values, null, null);
+        if(STATE_CREAT_NEW == mState){
+            getContentResolver().insert(mUri, values);
+        } else if(STATE_EDIT == mState){
+            getContentResolver().update(mUri, values, null, null);
+        }
     }
 
     @Override
@@ -97,6 +101,7 @@ public class EditActivity extends BaseActivity implements LoaderManager.LoaderCa
             return;
         }
         data.moveToFirst();
+        mTileEditText.setText(data.getString(NotesLoader.NOTE_TITLE));
         mContentEditText.setText(data.getString(NotesLoader.NOTE_DETAIL));
     }
 
